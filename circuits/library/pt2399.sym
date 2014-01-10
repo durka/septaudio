@@ -1,0 +1,182 @@
+v 20130925 2
+B 300 0 1800 1700 3 0 0 0 -1 -1 0 -1 -1 -1 -1 -1
+P 200 1500 300 1500 1 0 0
+{
+T 200 1500 5 10 0 0 0 0 1
+pintype=unknown
+T 355 1495 1 10 1 1 0 0 1
+pinlabel=VCC
+T 105 1445 5 10 1 1 0 6 1
+pinnumber=1
+T 200 1500 5 10 0 0 0 0 1
+pinseq=1
+}
+P 200 1300 300 1300 1 0 0
+{
+T 200 1300 5 10 0 0 0 0 1
+pintype=unknown
+T 355 1295 1 10 1 1 0 0 1
+pinlabel=REF
+T 105 1245 5 10 1 1 0 6 1
+pinnumber=2
+T 200 1300 5 10 0 0 0 0 1
+pinseq=2
+}
+P 200 1100 300 1100 1 0 0
+{
+T 200 1100 5 10 0 0 0 0 1
+pintype=unknown
+T 355 1095 1 10 1 1 0 0 1
+pinlabel=AGND
+T 105 1045 5 10 1 1 0 6 1
+pinnumber=3
+T 200 1100 5 10 0 0 0 0 1
+pinseq=3
+}
+P 200 900 300 900 1 0 0
+{
+T 200 900 5 10 0 0 0 0 1
+pintype=unknown
+T 355 895 1 10 1 1 0 0 1
+pinlabel=DGND
+T 105 845 5 10 1 1 0 6 1
+pinnumber=4
+T 200 900 5 10 0 0 0 0 1
+pinseq=4
+}
+P 200 700 300 700 1 0 0
+{
+T 200 700 5 10 0 0 0 0 1
+pintype=unknown
+T 355 695 1 10 1 1 0 0 1
+pinlabel=CLKO
+T 105 645 5 10 1 1 0 6 1
+pinnumber=5
+T 200 700 5 10 0 0 0 0 1
+pinseq=5
+}
+P 200 500 300 500 1 0 0
+{
+T 200 500 5 10 0 0 0 0 1
+pintype=unknown
+T 355 495 1 10 1 1 0 0 1
+pinlabel=VCO
+T 105 445 5 10 1 1 0 6 1
+pinnumber=6
+T 200 500 5 10 0 0 0 0 1
+pinseq=6
+}
+P 200 300 300 300 1 0 0
+{
+T 200 300 5 10 0 0 0 0 1
+pintype=unknown
+T 355 295 1 10 1 1 0 0 1
+pinlabel=CC1
+T 105 245 5 10 1 1 0 6 1
+pinnumber=7
+T 200 300 5 10 0 0 0 0 1
+pinseq=7
+}
+P 200 100 300 100 1 0 0
+{
+T 200 100 5 10 0 0 0 0 1
+pintype=unknown
+T 355 95 1 10 1 1 0 0 1
+pinlabel=CC0
+T 105 45 5 10 1 1 0 6 1
+pinnumber=8
+T 200 100 5 10 0 0 0 0 1
+pinseq=8
+}
+P 2200 1500 2100 1500 1 0 0
+{
+T 2200 1500 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 1495 1 10 1 1 0 6 1
+pinlabel=LPF1IN
+T 2295 1445 5 10 1 1 0 0 1
+pinnumber=16
+T 2200 1500 5 10 0 0 0 0 1
+pinseq=16
+}
+P 2200 1300 2100 1300 1 0 0
+{
+T 2200 1300 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 1295 1 10 1 1 0 6 1
+pinlabel=LPF1OUT
+T 2295 1245 5 10 1 1 0 0 1
+pinnumber=15
+T 2200 1300 5 10 0 0 0 0 1
+pinseq=15
+}
+P 2200 1100 2100 1100 1 0 0
+{
+T 2200 1100 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 1095 1 10 1 1 0 6 1
+pinlabel=LPF2OUT
+T 2295 1045 5 10 1 1 0 0 1
+pinnumber=14
+T 2200 1100 5 10 0 0 0 0 1
+pinseq=14
+}
+P 2200 900 2100 900 1 0 0
+{
+T 2200 900 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 895 1 10 1 1 0 6 1
+pinlabel=LPF2IN
+T 2295 845 5 10 1 1 0 0 1
+pinnumber=13
+T 2200 900 5 10 0 0 0 0 1
+pinseq=13
+}
+P 2200 700 2100 700 1 0 0
+{
+T 2200 700 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 695 1 10 1 1 0 6 1
+pinlabel=OP2OUT
+T 2295 645 5 10 1 1 0 0 1
+pinnumber=12
+T 2200 700 5 10 0 0 0 0 1
+pinseq=12
+}
+P 2200 500 2100 500 1 0 0
+{
+T 2200 500 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 495 1 10 1 1 0 6 1
+pinlabel=OP2IN
+T 2295 445 5 10 1 1 0 0 1
+pinnumber=11
+T 2200 500 5 10 0 0 0 0 1
+pinseq=11
+}
+P 2200 300 2100 300 1 0 0
+{
+T 2200 300 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 295 1 10 1 1 0 6 1
+pinlabel=OP1IN
+T 2295 245 5 10 1 1 0 0 1
+pinnumber=10
+T 2200 300 5 10 0 0 0 0 1
+pinseq=10
+}
+P 2200 100 2100 100 1 0 0
+{
+T 2200 100 5 10 0 0 0 0 1
+pintype=unknown
+T 2045 95 1 10 1 1 0 6 1
+pinlabel=OP1OUT
+T 2295 45 5 10 1 1 0 0 1
+pinnumber=9
+T 2200 100 5 10 0 0 0 0 1
+pinseq=9
+}
+T 900 1800 8 10 1 1 0 0 1
+device=PT2399
+T 300 1800 8 10 1 1 0 0 1
+refdes=X?
