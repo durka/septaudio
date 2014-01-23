@@ -13,7 +13,7 @@ def setup_laser():
     laser = H.Sensor()
     laser.open('type=serial,device=/dev/tty.usbmodem1421,timeout=1')
     if not laser.is_open():
-        raise 'Laser did not open'
+        raise Exception('Laser did not open')
     data = H.ScanData()
     return laser, data
 
@@ -21,29 +21,30 @@ def setup_arm():
     print 'Opening arm'
     arm = S.Serial('/dev/tty.usbserial-A700ejEl', 9600, timeout=2)
     if not arm.isOpen():
-        raise 'Arm did not open'
+        raise Exception('Arm did not open')
     if arm.readline().strip() != '=== Dynamixel controller initialized ===':
-        raise 'Arm not responding'
+        raise Exception('Arm not responding')
     return arm
 
 def closest(laser, data):
     start = 360
     end = 720
-    d = 0.33 # distance from laser to arm base (TODO measure this)
+    mid = (start + end)/2
+    d = 0.14605 # distance from laser to arm base (meters)
 
     # find the closest reading
     #   "blinders on": only consider the middle 45 degrees of the field of vision
-    #   allowed range is 255-1500 which is approx. 1 foot - 2 meters
+    #   allowed range is 300-1500 which is approx. 1 foot - 2 meters
     laser.get_ranges(data)
     ranges = [data.range(i) for i in range(data.ranges_length())]
-    ranges = [r if 255 < r < 1500 else float('inf') for r in ranges]
+    ranges = [r if 300 < r < 1500 else float('inf') for r in ranges]
     i,y = min(enumerate(ranges[start:end]), key=operator.itemgetter(1))
 
     # from sensor clicks to meters
-    y /= 765 # TODO I totally made up this calibration constant
+    y /= 1000
     
     # angles
-    t = (i + start - 540)/1.5*math.pi/180 # angle WRT laser
+    t = (i + start - mid)/4*math.pi/180 # angle WRT laser
     t = math.asin(math.sin(math.pi - t) * y/math.sqrt(y**2 + d**2 - 2*y*d*math.cos(math.pi - t))) # angle WRT arm
 
     return i, y, t
@@ -54,20 +55,36 @@ def demo():
     arm = setup_arm()
 
     laser.set_power(True)
+    arm.write('Sm 100\ns 1 512\n') # emergency stop, set speed, and reset position
+    time.sleep(2)
+    print 'Starting'
+    HIST = 10
+    t_hist = [0]*HIST
     try:
         while True:
             i, y, t = closest(laser, data)
-            print i, y, t
-            p = 512 + t*512/math.pi
-            print 'Moving arm to:', p
-            arm.write('s 1 %d\n' % p)
-            time.sleep(t) # TODO another calibration constant, or we could do reads I guess
-            if y < 0.75:
-                print 'Audio warning'
-                os.system('say Move out of the way citizen')
+            
+            if not math.isinf(y):
+                # low pass filter
+                t_hist[1:] = t_hist[:-1]
+                t_hist[0] = t
+                tf = math.sum(t_hist)/HIST
+
+                print i, y, t, tf
+                p = 512 + tf*512/(math.pi/2)
+                print 'Moving arm to:', p
+                arm.write('s 1 %d\n' % p)
+                time.sleep(abs(tf)) # TODO another calibration constant, or we could do reads I guess
+                if y < 0.5:
+                    print 'Audio warning'
+                    os.system('say beep')
     except KeyboardInterrupt:
         print 'Shutting down'
-        laser.set_power(False)
+        laser.set_power(False)  # turn off laser
+        arm.write('Ss 1 512\n') # emergency stop + reset position
+        time.sleep(2)
+        laser.close()
+        arm.close()
 
 def test():
     laser, data = setup_laser()
