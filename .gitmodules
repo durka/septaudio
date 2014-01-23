@@ -4,3 +4,4 @@
 [submodule "hokuyoaist"]
 	path = hokuyoaist
 	url = git@github.com:durka/hokuyoaist
+	branch = my-changes
