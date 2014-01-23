@@ -1,7 +1,7 @@
 [submodule "flexiport"]
-	path = flexiport
+	path = demo/flexiport
 	url = https://github.com/gbiggs/flexiport.git
 [submodule "hokuyoaist"]
-	path = hokuyoaist
+	path = demo/hokuyoaist
 	url = git@github.com:durka/hokuyoaist
 	branch = my-changes
