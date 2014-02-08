@@ -7,6 +7,7 @@ import os
 import time
 import operator
 import math
+import multiprocessing as mp
 
 def setup_laser():
     print 'Opening laser'
@@ -24,6 +25,15 @@ def setup_arm():
         raise Exception('Arm did not open')
     if arm.readline().strip() != '=== Dynamixel controller initialized ===':
         raise Exception('Arm not responding')
+
+    # torque settings
+    #arm.write('t 1 0\n')
+    #arm.write('t 2 1\n')
+    #arm.write('t 3 1\n')
+    #arm.write('t 3 1\n')
+    #arm.write('t 4 1\n')
+    #arm.write('t 5 1\n')
+
     return arm
 
 def closest(laser, data):
@@ -37,7 +47,7 @@ def closest(laser, data):
     #   allowed range is 300-1500 which is approx. 1 foot - 2 meters
     laser.get_ranges(data)
     ranges = [data.range(i) for i in range(data.ranges_length())]
-    ranges = [r if 300 < r < 1500 else float('inf') for r in ranges]
+    ranges = [r if 100 < r < 1500 else float('inf') for r in ranges]
     i,y = min(enumerate(ranges[start:end]), key=operator.itemgetter(1))
 
     # from sensor clicks to meters
@@ -49,16 +59,20 @@ def closest(laser, data):
 
     return i, y, t
 
+def loud_noises():
+    os.system('say danger. septa bus approaching')
+
 def demo():
 
     laser, data = setup_laser()
     arm = setup_arm()
+    proc = mp.Process(target=loud_noises)
 
     laser.set_power(True)
     arm.write('Sm 100\ns 1 512\n') # emergency stop, set speed, and reset position
     time.sleep(2)
     print 'Starting'
-    HIST = 10
+    HIST = 5
     t_hist = [0]*HIST
     try:
         while True:
@@ -68,16 +82,18 @@ def demo():
                 # low pass filter
                 t_hist[1:] = t_hist[:-1]
                 t_hist[0] = t
-                tf = math.sum(t_hist)/HIST
+                tf = sum(t_hist)/HIST
 
                 print i, y, t, tf
-                p = 512 + tf*512/(math.pi/2)
+                p = 512 + tf*300/(math.pi/2)
                 print 'Moving arm to:', p
                 arm.write('s 1 %d\n' % p)
-                time.sleep(abs(tf)) # TODO another calibration constant, or we could do reads I guess
+                time.sleep(abs(tf)/2) # TODO another calibration constant, or we could do reads I guess
                 if y < 0.5:
                     print 'Audio warning'
-                    os.system('say beep')
+                    if not proc.is_alive():
+                        proc = mp.Process(target=loud_noises)
+                        proc.start()
     except KeyboardInterrupt:
         print 'Shutting down'
         laser.set_power(False)  # turn off laser
