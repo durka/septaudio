@@ -11,7 +11,10 @@ import math
 def setup_laser():
     print 'Opening laser'
     laser = H.Sensor()
-    laser.open('type=serial,device=/dev/tty.usbmodem1421,timeout=1')
+    if os.uname()[0] == 'Linux':
+        laser.open('type=serial,device=/dev/ttyACM0,timeout=1')
+    else:
+        laser.open('type=serial,device=/dev/tty.usbmodem1421,timeout=1')
     if not laser.is_open():
         raise Exception('Laser did not open')
     data = H.ScanData()
@@ -19,7 +22,10 @@ def setup_laser():
 
 def setup_arm():
     print 'Opening arm'
-    arm = S.Serial('/dev/tty.usbserial-A700ejEl', 9600, timeout=2)
+    if os.uname()[0] == 'Linux':
+        arm = S.Serial('/dev/ttyUSB0', 9600, timeout=2)
+    else:
+        arm = S.Serial('/dev/tty.usbserial-A700ejEl', 9600, timeout=2)
     if not arm.isOpen():
         raise Exception('Arm did not open')
     if arm.readline().strip() != '=== Dynamixel controller initialized ===':
@@ -68,7 +74,7 @@ def demo():
                 # low pass filter
                 t_hist[1:] = t_hist[:-1]
                 t_hist[0] = t
-                tf = math.sum(t_hist)/HIST
+                tf = sum(t_hist)/HIST
 
                 print i, y, t, tf
                 p = 512 + tf*512/(math.pi/2)
@@ -77,7 +83,10 @@ def demo():
                 time.sleep(abs(tf)) # TODO another calibration constant, or we could do reads I guess
                 if y < 0.5:
                     print 'Audio warning'
-                    os.system('say beep')
+                    if os.uname()[0] == 'Linux':
+                        os.system('espeak beep')
+                    else:
+                        os.system('say beep')
     except KeyboardInterrupt:
         print 'Shutting down'
         laser.set_power(False)  # turn off laser

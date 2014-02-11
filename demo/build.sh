@@ -10,7 +10,7 @@ cd flexiport
 rm -rf build
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$PREFIX ..
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF ..
 make install
 cd ../..
 
@@ -19,7 +19,8 @@ cd hokuyoaist
 rm -rf build
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DPYTHON_EXECUTABLE=`which python` -DPYTHON_CUSTOM_FRAMEWORK=/usr/local/Frameworks/Python.framework ..
+#cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF -DPYTHON_EXECUTABLE=`which python` -DPYTHON_CUSTOM_FRAMEWORK=/usr/local/Frameworks/Python.framework ..
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF -DPYTHON_EXECUTABLE=`which python2` ..
 make install
 cd ../..
 
