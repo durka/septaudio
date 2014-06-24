@@ -1,6 +1,5 @@
 from __future__ import division
 import hokuyoaist as H
-from matplotlib import pyplot as P
 import serial as S
 import sys
 import os
@@ -8,6 +7,7 @@ import time
 import operator
 import math
 import multiprocessing as mp
+from cPickle import dump as pickle
 
 def setup_laser():
     print 'Opening laser'
@@ -41,6 +41,11 @@ def setup_arm():
     #arm.write('t 5 1\n')
 
     return arm
+
+def move_arm(arm, angle):
+    arm.write('s 1 %d\n' % angle)
+    time.sleep(1)
+    print 'arm replied:', arm.readline()
 
 def closest(laser, data):
     start = 360
@@ -79,7 +84,7 @@ def demo():
 
     laser, data = setup_laser()
     arm = setup_arm()
-    proc = mp.Process(target=loud_noises)
+    noiseproc = mp.Process(target=loud_noises)
 
     speak('system is armed') 
 
@@ -107,9 +112,9 @@ def demo():
                 time.sleep(abs(tf)/2) # TODO another calibration constant, or we could do reads I guess
                 if y < 0.5:
                     print 'Audio warning'
-                    if not proc.is_alive():
-                        proc = mp.Process(target=loud_noises)
-                        proc.start()
+                    if not noiseproc.is_alive():
+                        noiseproc = mp.Process(target=loud_noises)
+                        noiseproc.start()
     except KeyboardInterrupt:
         print 'Shutting down'
         speak('shutting down')
@@ -130,7 +135,6 @@ def test():
     except KeyboardInterrupt:
         print 'Shutting down'
         laser.set_power(False)
-
 
 if __name__ == '__main__':
     {'demo': demo,
