@@ -1,6 +1,5 @@
 from __future__ import division
 import hokuyoaist as H
-from matplotlib import pyplot as P
 import serial as S
 import sys
 import os
@@ -8,6 +7,7 @@ import time
 import operator
 import math
 import multiprocessing as mp
+from cPickle import dump as pickle
 
 def setup_laser():
     print 'Opening laser'
@@ -42,6 +42,11 @@ def setup_arm():
 
     return arm
 
+def move_arm(arm, angle):
+    arm.write('s 1 %d\n' % angle)
+    time.sleep(1)
+    print 'arm replied:', arm.readline()
+
 def closest(laser, data):
     start = 360
     end = 720
@@ -65,21 +70,28 @@ def closest(laser, data):
 
     return i, y, t
 
-def loud_noises():
+# shell escapes not handled
+def speak(s):
     if os.uname()[0] == 'Linux':
-        os.system('espeak "danger. septa bus approaching"')
+        os.system('espeak -s 100 -a 200 "%s"' % s)
     else:
-        os.system('say danger. septa bus approaching')
+        os.system('say %s' % s)
+
+def loud_noises():
+    speak('danger. septa bus approaching')
 
 def demo():
 
     laser, data = setup_laser()
     arm = setup_arm()
-    proc = mp.Process(target=loud_noises)
+    noiseproc = mp.Process(target=loud_noises)
+
+    speak('system is armed') 
 
     laser.set_power(True)
-    arm.write('Sm 100\ns 1 512\n') # emergency stop, set speed, and reset position
-    time.sleep(2)
+    arm.write('S')       # emergency stop
+    arm.write('m 100\n') # set speed
+    move_arm(arm, 512)   # re-center position
     print 'Starting'
     HIST = 5
     t_hist = [0]*HIST
@@ -100,11 +112,12 @@ def demo():
                 time.sleep(abs(tf)/2) # TODO another calibration constant, or we could do reads I guess
                 if y < 0.5:
                     print 'Audio warning'
-                    if not proc.is_alive():
-                        proc = mp.Process(target=loud_noises)
-                        proc.start()
+                    if not noiseproc.is_alive():
+                        noiseproc = mp.Process(target=loud_noises)
+                        noiseproc.start()
     except KeyboardInterrupt:
         print 'Shutting down'
+        speak('shutting down')
         laser.set_power(False)  # turn off laser
         arm.write('Ss 1 512\n') # emergency stop + reset position
         time.sleep(2)
@@ -122,7 +135,6 @@ def test():
     except KeyboardInterrupt:
         print 'Shutting down'
         laser.set_power(False)
-
 
 if __name__ == '__main__':
     {'demo': demo,
