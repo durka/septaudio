@@ -11,16 +11,18 @@ rm -rf build
 mkdir build
 cd build
 cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF ..
+cd ..
 make install
-cd ../..
+cd ..
 
 # now build hokuyoaist
 cd hokuyoaist
 rm -rf build
 mkdir build
 cd build
-#cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF -DPYTHON_EXECUTABLE=`which python` -DPYTHON_CUSTOM_FRAMEWORK=/usr/local/Frameworks/Python.framework ..
-cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF -DPYTHON_EXECUTABLE=`which python2` ..
+cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF -DPYTHON_EXECUTABLE=`which python` -DPYTHON_CUSTOM_FRAMEWORK=/usr/local/Frameworks/Python.framework ..
+#cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DBUILD_DOCUMENTATION=OFF -DPYTHON_EXECUTABLE=`which python2` ..
+cd ..
 make install
-cd ../..
+cd ..
 
