@@ -8,6 +8,7 @@ import operator
 import math
 import multiprocessing as mp
 from cPickle import dump as pickle
+from time import sleep
 
 def setup_laser():
     print 'Opening laser'
@@ -39,6 +40,8 @@ def setup_arm():
     #arm.write('t 3 1\n')
     #arm.write('t 4 1\n')
     #arm.write('t 5 1\n')
+
+    arm.write('Q 2\n') # turn off sound
 
     return arm
 
@@ -77,14 +80,19 @@ def speak(s):
     else:
         os.system('say %s' % s)
 
-def loud_noises():
+def old_loud_noises(arm):
     speak('danger. septa bus approaching')
+
+def loud_noises(arm):
+    arm.write('q 2\n')
+    sleep(2)
+    arm.write('Q 2\n')
 
 def demo():
 
     laser, data = setup_laser()
     arm = setup_arm()
-    noiseproc = mp.Process(target=loud_noises)
+    noiseproc = mp.Process(target=lambda: loud_noises(arm))
 
     speak('system is armed') 
 
@@ -113,7 +121,7 @@ def demo():
                 if y < 0.5:
                     print 'Audio warning'
                     if not noiseproc.is_alive():
-                        noiseproc = mp.Process(target=loud_noises)
+                        noiseproc = mp.Process(target=lambda: loud_noises(arm))
                         noiseproc.start()
     except KeyboardInterrupt:
         print 'Shutting down'
