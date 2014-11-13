@@ -3,7 +3,7 @@
 	url = https://github.com/gbiggs/flexiport.git
 [submodule "hokuyoaist"]
 	path = demo/hokuyoaist
-	url = git@github.com:durka/hokuyoaist
+	url = https://github.com/durka/hokuyoaist
 	branch = my-changes
 [submodule "marcus_model"]
 	path = marcus_model
