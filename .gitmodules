@@ -5,3 +5,6 @@
 	path = demo/hokuyoaist
 	url = git@github.com:durka/hokuyoaist
 	branch = my-changes
+[submodule "marcus_model"]
+	path = marcus_model
+	url = https://github.com/marcuspanje/DSP_model
